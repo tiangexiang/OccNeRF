@@ -1,0 +1,4 @@
+dataset:
+  path: ../../dataset/wild
+  subject: 'pac_data2'
+  sex: 'neutral'

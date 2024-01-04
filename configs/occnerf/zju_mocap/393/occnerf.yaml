@@ -1,0 +1,71 @@
+task: 'zju_mocap'
+subject: 'p393'
+experiment: 'occnerf'
+
+network_module: 'core.nets.occnerf.voxnetv5p14p2'
+
+occlude: True
+
+occlusion:
+  range: 526 # 80% mask
+  mid: 434 # mid point of the occlusion
+  width: 68 # 50% occlusion for the first range
+
+
+include_img: True
+
+canonical_mlp:
+  module: 'core.nets.occnerf.canonical_mlps.voxnetv5p14p2'
+  mlp_depth: 4        # layers in network
+  mlp_width: 256       # channels per layer
+  multires: 10         # log2 of max freq for positional encoding (3D location)
+  i_embed: 0           # set 0 for default positional encoding, -1 for none
+
+##############################################3
+## Network Specs
+
+# non-rigid motion mlp
+non_rigid_motion_mlp:
+  kick_in_iter: 100000
+  full_band_iter: 200000
+
+# pose decoder
+pose_decoder:
+  kick_in_iter: 2000000
+
+##############################################3
+## Data Configuration
+
+train:
+  dataset_module: 'core.data.occnerf.train'
+  dataset: 'zju_393_train'
+  maxiter: 100000
+
+progress:
+  dataset_module: 'core.data.occnerf.train'
+  dataset: 'zju_393_test'
+  dump_interval: 2000
+
+movement:
+  dataset_module: 'core.data.occnerf.train'
+  dataset: 'zju_393_test'
+
+freeview:
+  dataset_module: 'core.data.occnerf.freeview'
+  dataset: 'zju_393_test'
+
+allview:
+  dataset_module: 'core.data.occnerf.allview'
+  dataset: 'zju_393_test'
+
+tpose:
+  dataset_module: 'core.data.occnerf.tpose'
+  dataset: 'zju_393_test'
+
+bgcolor: [0., 0., 0.]
+#bgcolor: [255., 255., 255.]
+resize_img_scale: 0.5
+
+# reduce the size of patch from 32x32 to 20x20 to fit in a single gpu
+patch:
+  size: 32 #20      # [Patch] size of patch

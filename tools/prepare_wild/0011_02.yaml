@@ -1,0 +1,4 @@
+dataset:
+  path: ../../dataset/wild
+  subject: '0011_02'
+  sex: 'neutral'

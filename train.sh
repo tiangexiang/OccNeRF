@@ -1,0 +1,1 @@
+python3 train.py --cfg configs/occnerf/zju_mocap/387/occnerf.yaml

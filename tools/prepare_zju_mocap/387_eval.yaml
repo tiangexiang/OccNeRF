@@ -1,0 +1,25 @@
+# dataset:
+#   zju_mocap_path: /vision/u/xtiange/human/data/zjumocap-public
+#   subject: '387'
+#   sex: 'neutral'
+
+# training_view: 1-22
+# max_frames: 540
+# skip: 30  # choose image per 30 frame
+
+# output:
+#   dir: ../../dataset/zju_mocap
+#   name: '387'
+
+dataset:
+  zju_mocap_path: /vision/u/xtiange/human/data/zjumocap-public
+  subject: '387'
+  sex: 'neutral'
+
+eval_view: 1-22  # camera index, from Camera_B2 to Camera_B23
+max_frames: 540
+skip: 30  # choose image per 30 frame
+
+output:
+  dir: ../../dataset/zju_mocap/processed
+  name: '387_eval'
