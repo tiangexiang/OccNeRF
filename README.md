@@ -1,5 +1,5 @@
 # OccNeRF: Rendering Humans from Object-Occluded Monocular Videos, ICCV 2023
-Project Page: https://cs.stanford.edu/~xtiange/projects/occnerf/
+Project Page: https://cs.stanford.edu/~xtiange/projects/occnerf/  
 Paper: https://arxiv.org/pdf/2308.04622.pdf
 
 ![framework](./teaser.png)
@@ -27,6 +27,9 @@ git+https://github.com/facebookresearch/pytorch3d.git
     pip install "git+https://github.com/qinzheng93/Easy-KPConv.git"
 
 4. Install [PyTorch3D](https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md) by following its official instructions.
+
+5. Build `gridencoder` by following the instructions provided in [torch-ngp](https://github.com/ashawkey/torch-ngp/tree/main#build-extension-optional)
+
 
 ### `Download SMPL model`
 
