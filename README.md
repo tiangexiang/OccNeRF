@@ -8,11 +8,6 @@ Paper: https://arxiv.org/pdf/2308.04622.pdf
 
 ### `Configure environment`
 
-
-git+https://github.com/qinzheng93/Easy-KPConv.git
-git+https://github.com/facebookresearch/pytorch3d.git
-
-
 1. Create and activate a virtual environment.
 
     conda create --name occnerf python=3.7
