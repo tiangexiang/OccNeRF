@@ -6,7 +6,6 @@ from core.nets.occnerf.gridencoder import GridEncoder
 from core.nets.occnerf.shencoder import SHEncoder
 from torch.autograd import Function
 from torch.cuda.amp import custom_bwd, custom_fwd 
-from nerfacc import ContractionType, OccupancyGrid
 
 import torch.nn.functional as F
 from copy import deepcopy

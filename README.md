@@ -22,13 +22,9 @@ git+https://github.com/facebookresearch/pytorch3d.git
 
     pip install -r requirements.txt
 
-3. Install [Easy-KPConv](https://github.com/qinzheng93/Easy-KPConv) for keops KNN support:
+3. Install [PyTorch3D](https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md) by following its official instructions.
 
-    pip install "git+https://github.com/qinzheng93/Easy-KPConv.git"
-
-4. Install [PyTorch3D](https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md) by following its official instructions.
-
-5. Build `gridencoder` by following the instructions provided in [torch-ngp](https://github.com/ashawkey/torch-ngp/tree/main#build-extension-optional)
+4. Build `gridencoder` by following the instructions provided in [torch-ngp](https://github.com/ashawkey/torch-ngp/tree/main#build-extension-optional)
 
 
 ### `Download SMPL model`

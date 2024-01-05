@@ -19,7 +19,7 @@ import numpy as np
 from copy import deepcopy
 from torchvision import models
 
-from easy_kpconv.ops.knn import knn as kpknn 
+from .knn import knn as fast_knn 
 
 from torch_cluster import fps as cluster_fps
 from pytorch3d.ops.points_normals import estimate_pointcloud_normals
@@ -161,33 +161,6 @@ class Network(nn.Module):
     def get_point_normal(self):
         return estimate_pointcloud_normals(self.point_cloud.unsqueeze(0), neighborhood_size = 10)[0]
 
-    @staticmethod
-    def knn(query, data, k):
-        return kpknn(query.float(),
-                    data,
-                    k,
-                    #distance_limit = 0.1,
-                    return_distance = False,
-                    padding_mode= "empty")
-    
-    def scatter_knn_feat(self, inp, index, src):
-        '''
-        inp: N, c
-        index: n, k
-        src: n, k, c
-        '''
-        N, c = inp.shape[0], inp.shape[-1]
-        index = index.view(-1) * c # Nk, c
-        index = index.unsqueeze(-1).expand(-1, c)
-        index = index + torch.arange(c).view(1,c).to(index)
-        index = index.view(-1)
-
-        inp = inp.view(-1)
-
-        inp = torch.scatter(inp.view(-1), 0, index, src.view(-1), reduce='add')
-        return inp.view(N, c)
-
-
     def _query_mlp(
             self,
             pos_xyz,
@@ -263,7 +236,7 @@ class Network(nn.Module):
             with torch.no_grad():
                 ranges = torch.cumsum(torch.tensor([0, xyz.shape[0], xyz.shape[0], xyz.shape[0], xyz.shape[0]]), 0)
                 ranges_x = torch.stack((ranges[:-1], ranges[1:])).t().int().contiguous()
-                knn_idxs = kpknn(xyz.repeat(4,1),
+                knn_idxs = fast_knn(xyz.repeat(4,1),
                                 torch.cat([self.point_base, self.point_base[self.fps_index[0]], self.point_base[self.fps_index[1]], self.point_base[self.fps_index[2]]], dim=0),
                                 k,
                                 #distance_limit = 0.1,
@@ -284,12 +257,16 @@ class Network(nn.Module):
 
             N = xyz.shape[0]
             
-            knn_att = point_counter[knn_idxs].view(N,-1,1)#[point_counter[knn_idx].view(N, k, -1) for knn_idx in knn_idxs]
+            knn_att = point_counter[knn_idxs].view(N,-1,1)
             point_norms = self.point_norms.to(xyz.device)[knn_idxs[:,0]].view(N, k, -1) # N, K, 3
 
             point_cloud = self.point_cloud.to(xyz)
             point_base = self.point_base.to(xyz)
-            kidx = self.knn(point_cloud, point_base, 3)
+            kidx = fast_knn(point_cloud.float(),
+                    point_base,
+                    3,
+                    return_distance = False,
+                    padding_mode= "empty")
 
             # determine sdf
             knn_base = point_base[kidx].view(-1, 3, 3)
@@ -313,11 +290,10 @@ class Network(nn.Module):
                         xyz=xyz,
                         xyz_embedded=xyz_embedded,
                         knn_points=self.point_base[knn_idxs[:,0]].view(N, k, -1),
-                        #knn_feats=knn_feats,
                         point_norms=point_norms,
                         knn_att=knn_att,
                         point_cloud=knn_base,
-                        point_sdf=dist, #torch.norm(self.point_norms.to(xyz.device) * self.point_dist.to(xyz.device), dim=-1),
+                        point_sdf=dist, 
                         knn_idxs=knn_idxs,
                         learnable_points=point_cloud,
                         )]
@@ -529,7 +505,11 @@ class Network(nn.Module):
 
                 term_pts = batched_index_select(term_pts, 1, term_point).squeeze(1) # N
 
-                knn_index = self.knn(term_pts.detach().float(), self.point_cloud.float(), k)
+                knn_index = fast_knn(term_pts.detach().float(),
+                                    self.point_cloud.float(),
+                                    k,
+                                    return_distance = False,
+                                    padding_mode= "empty")
 
                 N, k = knn_index.shape[0], knn_index.shape[1] 
 

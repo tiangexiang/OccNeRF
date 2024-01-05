@@ -302,12 +302,13 @@ class Trainer(object):
         self.progress_begin()
 
         if hasattr(self.network, 'point_cloud'):
-            print('Saving Neural Points ...')
+            print('Saving neural points with visibility attention ...')
             
             points = self.network.point_cloud.detach().cpu().numpy() # N, 3
 
             if self.prev_points is not None:
-                print('total change:', np.sum(np.sum(np.abs(self.prev_points - points))))
+                print('Neural points changes:', np.sum(np.sum(np.abs(self.prev_points - points))))
+
             self.prev_points = points
 
             fig = plt.figure()
