@@ -144,6 +144,9 @@ def run_movement(render_folder_name='movement'):
         output_dir=os.path.join(cfg.logdir, cfg.load_net),
         exp_name=render_folder_name)
 
+    if hasattr(model, 'generate_neural_points'):
+        model.generate_neural_points(test_loader.dataset.avg_betas)
+
     model = load_network(model)
     model.eval()
     for idx, batch in enumerate(tqdm(test_loader)):
