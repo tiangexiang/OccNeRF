@@ -64,6 +64,8 @@ Finally, run the data preprocessing script.
 
 Download the preprocessed two sequences used in the paper from [here](https://drive.google.com/drive/folders/1xH9dvrA7_-pCCF29vTKs7YAoFTVpnpoR?usp=sharing).  
 
+Please resepect OcMotion's original [license of usage](https://github.com/boycehbz/CHOMP).
+
 ### `Train`
 
 To train a model: 
