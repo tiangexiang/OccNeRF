@@ -39,7 +39,7 @@ Follow [this page](https://github.com/vchoutas/smplx/tree/master/tools) to remov
 
 Below we take the subject 387 as a running example.
 
-### `Prepare a dataset`
+### `Prepare the ZJU-Mocap daatset`
 
 First, download ZJU-Mocap dataset from [here](https://github.com/zju3dv/neuralbody/blob/master/INSTALL.md#zju-mocap-dataset). 
 
@@ -59,6 +59,10 @@ Finally, run the data preprocessing script.
     cd tools/prepare_zju_mocap
     python prepare_dataset.py --cfg 387.yaml
     cd ../../
+
+### `Prepare the two OcMotion sequences`
+
+Download the preprocessed two sequences used in the paper from [here](https://drive.google.com/drive/folders/1xH9dvrA7_-pCCF29vTKs7YAoFTVpnpoR?usp=sharing).  
 
 ### `Train`
 

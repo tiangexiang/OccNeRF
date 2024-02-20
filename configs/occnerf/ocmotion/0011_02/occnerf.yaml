@@ -1,21 +1,11 @@
-task: 'zju_mocap'
-subject: 'p393'
+task: 'ocmotion'
+subject: '0011_02'
 experiment: 'occnerf'
 
 network_module: 'core.nets.occnerf.network'
 
-occlude: True
-
-occlusion:
-  range: 526 # 80% mask
-  mid: 434 # mid point of the occlusion
-  width: 68 # 50% occlusion for the first range
-
-
-include_img: True
-
 canonical_mlp:
-  module: 'core.nets.occnerf.canonical_mlps.occnerf_mlp'
+  module: 'core.nets.occnerf.canonical_mlps.occnerf'
   mlp_depth: 4        # layers in network
   mlp_width: 256       # channels per layer
   multires: 10         # log2 of max freq for positional encoding (3D location)
@@ -24,48 +14,58 @@ canonical_mlp:
 ##############################################3
 ## Network Specs
 
-# non-rigid motion mlp
-non_rigid_motion_mlp:
-  kick_in_iter: 100000
-  full_band_iter: 200000
-
 # pose decoder
 pose_decoder:
-  kick_in_iter: 2000000
+  kick_in_iter: 9999999
 
 ##############################################3
 ## Data Configuration
 
 train:
   dataset_module: 'core.data.occnerf.train'
-  dataset: 'zju_393_train'
-  maxiter: 100000
-
+  dataset: 'monocular_train'
+  lossweights:
+    lpips: 1.0
+    mse: 0.2
+  
 progress:
   dataset_module: 'core.data.occnerf.train'
-  dataset: 'zju_393_test'
-  dump_interval: 2000
+  dataset: 'monocular_test'
+  dump_interval: 1000
 
 movement:
   dataset_module: 'core.data.occnerf.train'
-  dataset: 'zju_393_test'
+  dataset: 'monocular_test'
 
 freeview:
   dataset_module: 'core.data.occnerf.freeview'
-  dataset: 'zju_393_test'
+  dataset: 'monocular_test'
 
 allview:
   dataset_module: 'core.data.occnerf.allview'
-  dataset: 'zju_393_test'
+  dataset: 'monocular_test'
 
 tpose:
-  dataset_module: 'core.data.occnerf.tpose'
-  dataset: 'zju_393_test'
 
-bgcolor: [0., 0., 0.]
+  dataset_module: 'core.data.occnerf.tpose'
+  dataset: 'monocular_test'
+
+backview:
+  dataset_module: 'core.data.occnerf.backview'
+  dataset: 'monocular_test'
+
+
 #bgcolor: [255., 255., 255.]
-resize_img_scale: 0.5
+bgcolor: [0., 0., 0.]
+resize_img_scale: 0.25
+
+bbox_offset: 2.0 # 0.15 for training
+
+# N_samples: 128      # number of samples for each ray in coarse ray matching
+# netchunk_per_gpu: 100000 # number of pts sent through network in parallel, decrease if running out of memory
+# chunk: 8192   # 32768=1024*32, number of rays processed in parallel, decrease if running out of memory
+
 
 # reduce the size of patch from 32x32 to 20x20 to fit in a single gpu
 patch:
-  size: 32 #20      # [Patch] size of patch
+  size: 32      # [Patch] size of patch
